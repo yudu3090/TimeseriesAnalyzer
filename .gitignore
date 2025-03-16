@@ -1,0 +1,58 @@
+# Ignore Visual Studio specific files
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+ipch/
+*.VC.db
+*.VC.opendb
+*.code-workspace
+
+# Ignore Rider (JetBrains) specific files
+.idea/
+*.iml
+out/
+
+# Ignore build outputs
+bin/
+obj/
+*.exe
+*.dll
+*.pdb
+*.appx
+*.appxbundle
+*.msix
+*.msixbundle
+*.nupkg
+*.snupkg
+*.log
+*.cache
+
+# Ignore Node.js dependencies (if using npm for front-end)
+node_modules/
+package-lock.json
+yarn.lock
+
+# Ignore Blazor WebAssembly publish artifacts
+wwwroot/dist/
+wwwroot/framework/
+wwwroot/_content/
+wwwroot/css/*.map
+
+# Ignore .NET dependency cache
+.nuget/
+packages/
+project.lock.json
+project.assets.json
+
+# Ignore logs and temporary files
+logs/
+*.log
+*.tlog
+*.tmp
+*.swp
+*.bak
+
+# Ignore ReSharper and Rider cache files
+_ReSharper.Caches/

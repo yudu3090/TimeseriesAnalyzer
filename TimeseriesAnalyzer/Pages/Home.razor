@@ -1,0 +1,53 @@
+﻿@page "/"
+@using TimeseriesAnalyzer.Services
+@inject BinanceService BinanceService
+
+@if (loading)
+{
+    <p>Loading...</p>
+}
+else if (error != null)
+{
+    <p style="color:red;">Error: @error</p>
+}
+else
+{
+    <div class="container mt-5">
+        <h3>Bitcoin Price</h3>
+        <p>@price USD</p>
+        <button class="btn btn-primary" @onclick="RefreshPrice">Refresh Price</button>
+    </div>
+}
+
+
+@code {
+    private decimal price;
+    private bool loading = true;
+    private string error;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            price = await BinanceService.GetBitcoinPriceAsync();
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;  // Capture and display error
+        }
+        finally
+        {
+            loading = false;  // Hide the loading indicator after the call finishes
+        }
+    }
+    
+    private async Task RefreshPrice()
+    {
+        loading = true;
+        error = null;
+        price = await BinanceService.GetBitcoinPriceAsync();
+        loading = false;
+    }
+}
+
+
