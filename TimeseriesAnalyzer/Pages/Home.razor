@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using TimeseriesAnalyzer.Data
 @using TimeseriesAnalyzer.Services
 @inject BinanceService BinanceService
 
@@ -19,17 +20,51 @@ else
     </div>
 }
 
+<h3>Bitcoin Price Chart (Last 30 Days)</h3>
+
+@if (historicalData == null)
+{
+    <p>Loading historical data...</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Date</th>
+            <th>Open</th>
+            <th>High</th>
+            <th>Low</th>
+            <th>Close</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in historicalData)
+        {
+            <tr>
+                <td>@item.OpenTime.ToShortDateString()</td>
+                <td>@item.Open</td>
+                <td>@item.High</td>
+                <td>@item.Low</td>
+                <td>@item.Close</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
 
 @code {
     private decimal price;
     private bool loading = true;
     private string error;
+    private List<Candlestick> historicalData;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            price = await BinanceService.GetBitcoinPriceAsync();
+            price = await BinanceService.GetBitcoinPriceAsync("BTCUSDT");
+            historicalData = await BinanceService.GetBitcoinPriceTimeseriesAsync("BTCUSDT", "1d", 30);
         }
         catch (Exception ex)
         {
@@ -45,7 +80,7 @@ else
     {
         loading = true;
         error = null;
-        price = await BinanceService.GetBitcoinPriceAsync();
+        price = await BinanceService.GetBitcoinPriceAsync("BTCUSDT");
         loading = false;
     }
 }
