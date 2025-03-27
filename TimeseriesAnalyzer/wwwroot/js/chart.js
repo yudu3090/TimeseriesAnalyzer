@@ -14,7 +14,7 @@ window.drawModernBitcoinChart = async (bitcoinPrices) => {
     new Chart(ctx, {
         type: "line",
         data: {
-            labels: bitcoinPrices,
+            labels: ["-5d", "-4d", "-3d", "-2d", "-1d", "Today"],
             datasets: [{
                 label: "Bitcoin Price (USD)",
                 data: bitcoinPrices,
