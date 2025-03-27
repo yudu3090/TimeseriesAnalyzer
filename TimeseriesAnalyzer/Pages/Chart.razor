@@ -1,5 +1,4 @@
-﻿@using TimeseriesAnalyzer.Data
-@using TimeseriesAnalyzer.Services
+﻿@using TimeseriesAnalyzer.Services
 @inject BinanceService BinanceService
 @inject IJSRuntime Js
 
@@ -10,11 +9,11 @@
 </div>
 
 @code {
-    private List<Candlestick> BitcoinPrices = new();
+    private List<decimal> BitcoinPrices = new();
 
     protected override async Task OnInitializedAsync()
     {
-        BitcoinPrices = await BinanceService.GetBitcoinPriceTimeseriesAsync("BTCUSDT", "1d", 30);
+        BitcoinPrices = await BinanceService.GetBitcoinHistoricalPricesAsync("BTCUSDT", "1d", 30);
         await Js.InvokeVoidAsync("drawModernBitcoinChart", BitcoinPrices);
     }
 }

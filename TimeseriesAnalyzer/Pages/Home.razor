@@ -56,11 +56,37 @@ else
     </table>
 }
 
+
+<h3>Cryptocurrency Dashboard</h3>
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th>Symbol</th>
+        <th>Last Price (USD)</th>
+        <th>24h Change (%)</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var crypto in cryptoData)
+    {
+        <tr>
+            <td>@crypto.Symbol</td>
+            <td>@crypto.LastPrice</td>
+            <td style="color:@(crypto.PriceChangePercent > 0 ? "green" : "red")">
+                @crypto.PriceChangePercent %
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
 @code {
     private decimal price;
     private bool loading = true;
     private string error;
     private List<Candlestick> historicalData;
+    private List<MarketData> cryptoData = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -68,6 +94,7 @@ else
         {
             price = await BinanceService.GetBitcoinPriceAsync("BTCUSDT");
             historicalData = await BinanceService.GetBitcoinPriceTimeseriesAsync("BTCUSDT", "1d", 30);
+            cryptoData = await BinanceService.GetMultipleCryptosDataAsync();
         }
         catch (Exception ex)
         {

@@ -62,4 +62,30 @@ public class BinanceService
 
         return candlesticks;
     }
+    
+    public async Task<List<MarketData>> GetMultipleCryptosDataAsync()
+    {
+        var client = new HttpClient();
+        var symbols = new List<string> { "BTCUSDT", "ETHUSDT", "ADAUSDT", "BNBUSDT" }; // List of symbols to fetch (Bitcoin, Ethereum, Cardano, Binance Coin)
+        var cryptoDataList = new List<MarketData>();
+
+        foreach (var symbol in symbols)
+        {
+            var url = $"https://api.binance.com/api/v3/ticker/24hr?symbol={symbol}";
+            var response = await client.GetStringAsync(url);
+            var data = JsonConvert.DeserializeObject<Dictionary<string, object>>(response);
+
+            var cryptoPriceData = new MarketData()
+            {
+                Symbol = symbol,
+                LastPrice = Convert.ToDecimal(data["lastPrice"]),
+                PriceChangePercent = Convert.ToDecimal(data["priceChangePercent"])
+            };
+
+            cryptoDataList.Add(cryptoPriceData);
+        }
+
+        return cryptoDataList;
+    }
+
 }
