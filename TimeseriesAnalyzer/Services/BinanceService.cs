@@ -1,3 +1,4 @@
+using System.Net.Http.Json;
 using Newtonsoft.Json;
 using TimeseriesAnalyzer.Data;
 
@@ -17,6 +18,25 @@ public class BinanceService
         var response = await _httpClient.GetStringAsync($"https://api.binance.com/api/v3/ticker/price?symbol={symbol}");
         var priceData = JsonConvert.DeserializeObject<BinancePrice>(response);
         return decimal.Parse(priceData.Price);
+    }
+    
+    public async Task<List<decimal>> GetBitcoinHistoricalPricesAsync(string symbol, string interval, int limit)
+    {
+        var url = $"https://api.binance.com/api/v3/klines?symbol={symbol}&interval={interval}&limit={limit.ToString()}";
+        var response = await _httpClient.GetFromJsonAsync<List<List<object>>>(url);
+
+        if (response == null) return new List<decimal>();
+        try
+        {
+
+            return response.Select(candle => Convert.ToDecimal(candle[4].ToString())).ToList();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+
+        return response.Select(candle => Convert.ToDecimal(candle[4].ToString())).ToList();
     }
     
     public async Task<List<Candlestick>> GetBitcoinPriceTimeseriesAsync(string symbol, string interval, int limit)
